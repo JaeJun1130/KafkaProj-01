@@ -23,9 +23,12 @@ public class SimpleProducer {
         KafkaProducer<String, String> kafkaProducer = new KafkaProducer<>(properties);
 
         // ProducerRecord 객체 생성
-        ProducerRecord<String, String> producerRecord = new ProducerRecord<>(topicName, "hello world 2");
+        ProducerRecord<String, String> producerRecord = new ProducerRecord<>(topicName, "hello world 3");
 
-        // KafkaProducer message send
+        /**
+         * KafkaProducer message send.
+         * Kafka Producer 전송은 Producer Client의 별도 Thread가 전송을 담당한다는 점에서 기본적으로 Thread간 Async 전송임.
+         */
         kafkaProducer.send(producerRecord);
 
         kafkaProducer.flush();
