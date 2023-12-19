@@ -72,8 +72,7 @@ public class PizzaProducer {
         if (!sync) {
             kafkaProducer.send(producerRecord, (metadata, exception) -> {
                 if (exception == null) {
-                    logger.info("async message:" + pMessage.get("key") + " partition:" + metadata.partition() +
-                            " offset:" + metadata.offset());
+                    logger.info("async message:" + pMessage.get("key") + " partition:" + metadata.partition() + " offset:" + metadata.offset());
                 } else {
                     logger.error("exception error from broker " + exception.getMessage());
                 }
@@ -99,9 +98,15 @@ public class PizzaProducer {
         props.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "192.168.56.101:9092");
         props.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         props.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-        //props.setProperty(ProducerConfig.DELIVERY_TIMEOUT_MS_CONFIG, "50000");
-        //props.setProperty(ProducerConfig.ACKS_CONFIG, "0");
 
+        // acks 설정
+        props.setProperty(ProducerConfig.ACKS_CONFIG, "all");
+        // batch.size 설정 (Record Accumulator 크기 설정.
+        props.setProperty(ProducerConfig.BATCH_SIZE_CONFIG, "32000");
+        // linger 설정 (Record Accumulator 에서 배치를 기다리는 시간 20ms 이하 권장)
+        props.setProperty(ProducerConfig.LINGER_MS_CONFIG, "20");
+
+        //props.setProperty(ProducerConfig.DELIVERY_TIMEOUT_MS_CONFIG, "50000");
 
         //KafkaProducer object creation
         KafkaProducer<String, String> kafkaProducer = new KafkaProducer<String, String>(props);
