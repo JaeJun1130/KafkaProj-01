@@ -106,7 +106,16 @@ public class PizzaProducer {
         // linger 설정 (Record Accumulator 에서 배치를 기다리는 시간 20ms 이하 권장)
         props.setProperty(ProducerConfig.LINGER_MS_CONFIG, "20");
 
-        //props.setProperty(ProducerConfig.DELIVERY_TIMEOUT_MS_CONFIG, "50000");
+        /**
+         * 전송 / 재전송 설정 (delivery.timeout.ms >= linger.ms + request.timeout.ms)
+         * max.block.ms -> Send() 호출 시 Record Accumulator 에 입력하지 못하고 block 되는 최대 시간 초과시 Exception 발생.
+         *
+         * linger.ms -> Sender Thread 가 Record Accumulator 에서 배치별로 가져가기 위한 최대시간
+         * request.timeout.ms -> 전송에 걸리는 최대시간, 전송 재 시도 대기시간 제외, 초과시 retry 를 하거나 Timeout Exception 발생.
+         * retry.timout.ms -> 전송 재 시도를 위한 대기시간.
+         * delivery.timout.ms -> Producer 메시지 전송에 허용된 최대시간, 초과시 Timeout Exception 발생.
+         */
+        props.setProperty(ProducerConfig.DELIVERY_TIMEOUT_MS_CONFIG, "50000");
 
         //KafkaProducer object creation
         KafkaProducer<String, String> kafkaProducer = new KafkaProducer<String, String>(props);
