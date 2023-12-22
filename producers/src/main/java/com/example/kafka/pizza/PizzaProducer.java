@@ -117,6 +117,17 @@ public class PizzaProducer {
          */
         props.setProperty(ProducerConfig.DELIVERY_TIMEOUT_MS_CONFIG, "50000");
 
+        /**
+         * 중복없이 전송 설정 (kafka 3.0 부터 명시하지 않으면 기본 값이 true)
+         * 명시하지 않았을경우 아래 설정값들이 바뀌면 기본값이 true로 되어 있어도 ENABLE_IDEMPOTENCE_CONFIG 설정이 적용되지 않음.
+         *
+         * 명시했을 경우 주의사항
+         * acks 설정은 all
+         * max_in_flight~ 설정은 1~5
+         * retries 설정은 0 이상
+         */
+        props.setProperty(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, "true");
+
         //KafkaProducer object creation
         KafkaProducer<String, String> kafkaProducer = new KafkaProducer<String, String>(props);
 
