@@ -1,9 +1,6 @@
 package com.example.kafka;
 
-import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.common.errors.WakeupException;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.slf4j.Logger;
@@ -21,7 +18,15 @@ public class ConsumerMTopicRebalance {
         props.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "192.168.56.101:9092");
         props.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         props.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
-        props.setProperty(ConsumerConfig.GROUP_ID_CONFIG, "group-mtopic");
+        props.setProperty(ConsumerConfig.GROUP_ID_CONFIG, "group-assign");
+        /**
+         * consumer partitions 맵핑 전략.
+         * - Range (default)
+         * - Round Robin
+         * - Sticky
+         * - Cooperative Sticky
+         */
+        props.setProperty(ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG, RoundRobinAssignor.class.getName());
 //        props.setProperty(ConsumerConfig.GROUP_INSTANCE_ID_CONFIG, "3");
 
         KafkaConsumer<String, String> kafkaConsumer = new KafkaConsumer<>(props);
