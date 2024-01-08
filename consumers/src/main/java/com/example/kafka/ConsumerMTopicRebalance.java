@@ -26,7 +26,8 @@ public class ConsumerMTopicRebalance {
          * - Sticky
          * - Cooperative Sticky
          */
-        props.setProperty(ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG, RoundRobinAssignor.class.getName());
+        props.setProperty(ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG, CooperativeStickyAssignor.class.getName());
+//        props.setProperty(ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG, RoundRobinAssignor.class.getName());
 //        props.setProperty(ConsumerConfig.GROUP_INSTANCE_ID_CONFIG, "3");
 
         KafkaConsumer<String, String> kafkaConsumer = new KafkaConsumer<>(props);
